@@ -41,13 +41,17 @@ class Mover:
                             matches.remove(match)
                             break
 
-        print("*****\nMoved {} files".format(self.counter))
+        if self.counter == 1:
+            print("*****\nMoved {} file".format(self.counter))
+        else:
+            print("*****\nMoved {} files".format(self.counter))
 
     def move_subfile(self, src, dst, subfile):
         src_path = src + "/" + subfile
         shutil.move(src_path, dst)
         self.counter += 1
         print("Moving a file: '{}' to new destination: '{}'".format(src_path, dst))
+
 
 
 def get_argsparser():
