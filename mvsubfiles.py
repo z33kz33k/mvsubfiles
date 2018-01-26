@@ -3,6 +3,7 @@
 import argparse
 import os
 import shutil
+import sys
 
 
 class Mover:
@@ -14,13 +15,19 @@ class Mover:
 
     def __init__(self, src, dst, *matches):
         self.src_dir = src
+        if not os.path.exists(self.src_dir):
+            sys.exit("Invalid source directory")
         self.dst_dir = dst
+        if not os.path.exists(self.dst_dir):
+            sys.exit("Invalid destination directory")
         if len(matches) > 1:
             self.matches = matches
             self.match = None
-        else:
+        elif len(matches) == 1:
             self.matches = None
             self.match = matches[0]
+        else:
+            sys.exit("No pattern to match")
         self.counter = 0
 
     def start(self):
