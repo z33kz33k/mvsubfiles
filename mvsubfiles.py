@@ -3,7 +3,6 @@
 import argparse
 import os
 import shutil
-import sys
 
 
 class Mover:
@@ -12,22 +11,21 @@ class Mover:
 
     Useful e.g. for moving videos of an YT playlist that were earlier batch-downloaded with JDownloader
     """
+    @staticmethod
+    def validate_args(src, dst, matches):
+        if not os.path.exists(src):
+            raise ValueError("Invalid source directory")
+        if not os.path.exists(dst):
+            raise ValueError("Invalid destination directory")
+        if len(matches) < 0:
+            raise ValueError("No pattern to match")
 
     def __init__(self, src, dst, *matches):
+        self.validate_args(src, dst, matches)
         self.src_dir = src
-        if not os.path.exists(self.src_dir):
-            sys.exit("Invalid source directory")
         self.dst_dir = dst
-        if not os.path.exists(self.dst_dir):
-            sys.exit("Invalid destination directory")
-        if len(matches) > 1:
-            self.matches = matches
-            self.match = None
-        elif len(matches) == 1:
-            self.matches = None
-            self.match = matches[0]
-        else:
-            sys.exit("No pattern to match")
+        self.matches = list(matches) if len(matches) > 1 else None
+        self.match = matches[0] if len(matches) == 1 else None
         self.counter = 0
 
     def start(self):
@@ -58,7 +56,6 @@ class Mover:
         shutil.move(src_path, dst)
         self.counter += 1
         print("Moving a file: '{}' to new destination: '{}'".format(src_path, dst))
-
 
 
 def get_argsparser():
